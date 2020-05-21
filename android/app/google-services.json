@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "844586929561",
+    "firebase_url": "https://my-agency-b4fa4.firebaseio.com",
+    "project_id": "my-agency-b4fa4",
+    "storage_bucket": "my-agency-b4fa4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:844586929561:android:ce268e6f0c45814bf2d708",
+        "android_client_info": {
+          "package_name": "com.jeeva.my_agency"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "844586929561-p51k6sgd38k5sclo702ig6q5gkq6gkru.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnzHMKjImaucEpP6FEEDLrxDimLlNqa3U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "844586929561-p51k6sgd38k5sclo702ig6q5gkq6gkru.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
