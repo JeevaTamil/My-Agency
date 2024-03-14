@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:my_agency/view/customer_listing_page.dart';
+import 'package:my_agency/helper/database_helper.dart';
+import 'package:my_agency/module/customer/view/customer_listing_page.dart';
+import 'package:my_agency/module/supplier/view/supplier_listing_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -11,9 +13,16 @@ class _HomePageState extends State<HomePage> {
 
   List<Widget> _pages = [
     CustomerListingPage(),
-    Text("Supplier"),
+    SupplierListingPage(),
     // Add other page widgets for suppliers, bill inward, etc.
   ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final databaseHelper = DatabaseHelper();
+  }
 
   @override
   Widget build(BuildContext context) {

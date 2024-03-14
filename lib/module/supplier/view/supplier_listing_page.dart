@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:my_agency/module/customer/model/customer.dart';
-import 'package:my_agency/module/customer/cubit/customer_cubit.dart';
-import 'package:my_agency/view/customer_detail_page.dart';
-import 'package:my_agency/view/customer_form_page.dart';
+import 'package:my_agency/module/supplier/model/supplier.dart';
+import 'package:my_agency/module/supplier/cubit/supplier_cubit.dart';
+import 'package:my_agency/module/supplier/view/supplier_detail_page.dart';
+import 'package:my_agency/module/supplier/view/supplier_form_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CustomerListingPage extends StatefulWidget {
+class SupplierListingPage extends StatefulWidget {
   @override
-  _CustomerListingPageState createState() => _CustomerListingPageState();
+  _SupplierListingPageState createState() => _SupplierListingPageState();
 }
 
-class _CustomerListingPageState extends State<CustomerListingPage> {
+class _SupplierListingPageState extends State<SupplierListingPage> {
   @override
   void initState() {
     super.initState();
@@ -20,7 +20,7 @@ class _CustomerListingPageState extends State<CustomerListingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Customer Listing'),
+        title: Text('Supplier Listing'),
         actions: [
           IconButton(
             icon: Icon(Icons.add),
@@ -30,7 +30,7 @@ class _CustomerListingPageState extends State<CustomerListingPage> {
                 builder: (context) {
                   return const AlertDialog(
                     content: SingleChildScrollView(
-                      child: CustomerFormPage(),
+                      child: SupplierFormPage(),
                     ),
                   );
                 },
@@ -39,10 +39,10 @@ class _CustomerListingPageState extends State<CustomerListingPage> {
           ),
         ],
       ),
-      body: BlocBuilder<CustomerCubit, CustomerState>(
+      body: BlocBuilder<SupplierCubit, SupplierState>(
         builder: (context, state) {
-          return FutureBuilder<List<Customer>>(
-            future: state.customers,
+          return FutureBuilder<List<Supplier>>(
+            future: state.suppliers,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
@@ -53,14 +53,14 @@ class _CustomerListingPageState extends State<CustomerListingPage> {
                   child: Text('Error: ${snapshot.error}'),
                 );
               } else if (snapshot.hasData) {
-                final customers = snapshot.data!;
+                final suppliers = snapshot.data!;
                 return ListView.builder(
-                  itemCount: customers.length,
+                  itemCount: suppliers.length,
                   itemBuilder: (context, index) {
-                    final customer = customers[index];
+                    final supplier = suppliers[index];
                     return ListTile(
-                      title: Text(customer.name),
-                      subtitle: Text(customer.city),
+                      title: Text(supplier.name),
+                      subtitle: Text(supplier.city),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -71,8 +71,8 @@ class _CustomerListingPageState extends State<CustomerListingPage> {
                                 builder: (context) {
                                   return AlertDialog(
                                       content: SingleChildScrollView(
-                                    child: CustomerDetailPage(
-                                      customer: customer,
+                                    child: SupplierDetailPage(
+                                      supplier: supplier,
                                     ),
                                   ));
                                 },
@@ -87,8 +87,8 @@ class _CustomerListingPageState extends State<CustomerListingPage> {
                                 builder: (context) {
                                   return AlertDialog(
                                       content: SingleChildScrollView(
-                                          child: CustomerFormPage(
-                                              customer: customer)));
+                                          child: SupplierFormPage(
+                                              supplier: supplier)));
                                 },
                               );
                             },
@@ -101,7 +101,7 @@ class _CustomerListingPageState extends State<CustomerListingPage> {
                 );
               } else {
                 return const Center(
-                  child: Text('No customers found'),
+                  child: Text('No suppliers found'),
                 );
               }
             },

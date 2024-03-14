@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_agency/module/customer/cubit/customer_cubit.dart';
+import 'package:my_agency/module/supplier/cubit/supplier_cubit.dart';
 import 'package:my_agency/view/home_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,6 +17,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => CustomerCubit(),
+        ),
+        BlocProvider(
+          create: (context) => SupplierCubit(),
         ),
       ],
       child: MaterialApp(
