@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_agency/module/customer/cubit/customer_cubit.dart';
+import 'package:my_agency/module/navigation/cubit/navigation_cubit.dart';
+import 'package:my_agency/module/navigation/view/nav_landing_page.dart';
 import 'package:my_agency/module/supplier/cubit/supplier_cubit.dart';
 import 'package:my_agency/view/home_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,6 +23,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => SupplierCubit(),
         ),
+        BlocProvider(
+          create: (context) => NavigationCubit(),
+        ),
       ],
       child: MaterialApp(
         title: 'My Agency',
@@ -36,7 +41,7 @@ class MyApp extends StatelessWidget {
             elevation: 0, // Set the elevation of the AppBar (0 for no shadow)
           ),
         ),
-        home: HomePage(),
+        home: const NavLandingPage(),
       ),
     );
   }
