@@ -14,3 +14,7 @@ final class CustomerInitial extends CustomerState {
 final class CustomerUpdated extends CustomerState {
   const CustomerUpdated(super.customers);
 }
+
+final class CustomerSearch extends CustomerState {
+  const CustomerSearch(super.customers);
+}

@@ -11,30 +11,68 @@ class CustomerListingPage extends StatefulWidget {
 }
 
 class _CustomerListingPageState extends State<CustomerListingPage> {
+  TextEditingController _searchController = TextEditingController();
+  List<Customer>? _filteredCustomers;
+  bool _isSearching = false;
+
   @override
   void initState() {
     super.initState();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    BlocProvider.of<CustomerCubit>(context)
+        .searchCustomer(_searchController.text);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Customer Listing'),
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: 'Search...',
+                  border: InputBorder.none,
+                ),
+              )
+            : Text('Customer Listing'),
         actions: [
+          if (!_isSearching)
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return const AlertDialog(
+                      content: SingleChildScrollView(
+                        child: CustomerFormPage(),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
           IconButton(
-            icon: Icon(Icons.add),
+            icon: Icon(_isSearching ? Icons.close : Icons.search),
             onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return const AlertDialog(
-                    content: SingleChildScrollView(
-                      child: CustomerFormPage(),
-                    ),
-                  );
-                },
-              );
+              setState(() {
+                if (_isSearching) {
+                  // Clear search
+                  _searchController.clear();
+                }
+                _isSearching = !_isSearching;
+              });
             },
           ),
         ],

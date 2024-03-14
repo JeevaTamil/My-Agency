@@ -22,4 +22,15 @@ class CustomerCubit extends Cubit<CustomerState> {
     DatabaseHelper().deleteCustomer(customer);
     emit(CustomerUpdated(DatabaseHelper().getCustomers()));
   }
+
+  Future<void> searchCustomer(String searchString) async {
+    final customers = await DatabaseHelper().getCustomers();
+    final filteredCustomers = customers
+        .where((customer) =>
+            customer.name.toLowerCase().contains(searchString.toLowerCase()) ||
+            customer.city.toLowerCase().contains(searchString.toLowerCase()))
+        .toList();
+
+    emit(CustomerSearch(Future.value(filteredCustomers)));
+  }
 }
