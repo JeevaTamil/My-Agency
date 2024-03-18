@@ -84,7 +84,8 @@ class _CustomerFormPageState extends State<CustomerFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.45,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -108,9 +109,13 @@ class _CustomerFormPageState extends State<CustomerFormPage> {
                       icon: const Icon(Icons.close_rounded)),
                 ],
               ),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Name'),
+                decoration: const InputDecoration(
+                  labelText: 'Name',
+                  border: OutlineInputBorder(),
+                ),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Please enter a name';
@@ -118,14 +123,18 @@ class _CustomerFormPageState extends State<CustomerFormPage> {
                   return null;
                 },
               ),
+              const SizedBox(height: 16.0),
               TextFormField(
                 maxLines: 3,
                 controller: _addressController,
-                decoration: const InputDecoration(labelText: 'Address'),
+                decoration: const InputDecoration(
+                    labelText: 'Address', border: OutlineInputBorder()),
               ),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _cityController,
-                decoration: const InputDecoration(labelText: 'City'),
+                decoration: const InputDecoration(
+                    labelText: 'City', border: OutlineInputBorder()),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Please enter a city';
@@ -133,9 +142,11 @@ class _CustomerFormPageState extends State<CustomerFormPage> {
                   return null;
                 },
               ),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _phoneNumberController,
-                decoration: const InputDecoration(labelText: 'Phone Number'),
+                decoration: const InputDecoration(
+                    labelText: 'Phone Number', border: OutlineInputBorder()),
                 keyboardType: TextInputType.phone,
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -144,9 +155,11 @@ class _CustomerFormPageState extends State<CustomerFormPage> {
                   return null;
                 },
               ),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _gstNumberController,
-                decoration: const InputDecoration(labelText: 'GST Number'),
+                decoration: const InputDecoration(
+                    labelText: 'GST Number', border: OutlineInputBorder()),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Please enter a GST number';

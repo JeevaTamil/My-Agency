@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_agency/module/bill_inward/cubit/bill_inward_cubit.dart';
 import 'package:my_agency/module/customer/cubit/customer_cubit.dart';
 import 'package:my_agency/module/navigation/cubit/navigation_cubit.dart';
 import 'package:my_agency/module/navigation/view/nav_landing_page.dart';
@@ -24,6 +25,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => NavigationCubit(),
+        ),
+        BlocProvider(
+          create: (context) => BillInwardCubit(),
         ),
       ],
       child: MaterialApp(

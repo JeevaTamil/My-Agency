@@ -11,30 +11,67 @@ class SupplierListingPage extends StatefulWidget {
 }
 
 class _SupplierListingPageState extends State<SupplierListingPage> {
+  final TextEditingController _searchController = TextEditingController();
+  bool _isSearching = false;
+
   @override
   void initState() {
     super.initState();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    BlocProvider.of<SupplierCubit>(context)
+        .searchSupplier(_searchController.text);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Supplier Listing'),
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                autofocus: true,
+                decoration: const InputDecoration(
+                  hintText: 'Search...',
+                  border: InputBorder.none,
+                ),
+              )
+            : const Text('Supplier Listing'),
         actions: [
+          if (!_isSearching)
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return const AlertDialog(
+                      content: SingleChildScrollView(
+                        child: SupplierFormPage(),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
           IconButton(
-            icon: Icon(Icons.add),
+            icon: Icon(_isSearching ? Icons.close : Icons.search),
             onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return const AlertDialog(
-                    content: SingleChildScrollView(
-                      child: SupplierFormPage(),
-                    ),
-                  );
-                },
-              );
+              setState(() {
+                if (_isSearching) {
+                  // Clear search
+                  _searchController.clear();
+                }
+                _isSearching = !_isSearching;
+              });
             },
           ),
         ],

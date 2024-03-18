@@ -1,3 +1,4 @@
+import 'package:my_agency/module/bill_inward/model/bill_inward.dart';
 import 'package:my_agency/module/customer/model/customer.dart';
 import 'package:my_agency/module/supplier/model/supplier.dart';
 import 'package:sqflite/sqflite.dart';
@@ -26,21 +27,25 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 2, // Increment the version number
+      version: 3, // Increment the version number
       onCreate: (Database db, int version) async {
-        createCustomerTable(db);
-        createSupplierTable(db);
+        createCustomerTable();
+        createSupplierTable();
+        createBillInwardTable();
       },
       onUpgrade: (Database db, int oldVersion, int newVersion) async {
         if (oldVersion < 2) {
-          createSupplierTable(db);
+          createSupplierTable();
+        } else if (oldVersion < 3) {
+          createBillInwardTable();
         }
       },
     );
   }
 
   // Customer Related methods
-  Future<void> createCustomerTable(Database db) async {
+  Future<void> createCustomerTable() async {
+    final db = await database;
     await db.execute('''
           CREATE TABLE IF NOT EXISTS customers (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -97,7 +102,8 @@ class DatabaseHelper {
   }
 
   // Supplier Related methods
-  Future<void> createSupplierTable(Database db) async {
+  Future<void> createSupplierTable() async {
+    final db = await database;
     await db.execute('''
           CREATE TABLE IF NOT EXISTS suppliers (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -150,6 +156,75 @@ class DatabaseHelper {
       'suppliers',
       where: 'id = ?',
       whereArgs: [supplier.id],
+    );
+  }
+
+  // Bill Inward related methods
+  Future<void> createBillInwardTable() async {
+    final db = await database;
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS billInwards(
+        id TEXT PRIMARY KEY,
+        customer TEXT,
+        supplier TEXT,
+        billNumber TEXT,
+        billDate TEXT,
+        productQty INTEGER,
+        billAmount REAL,
+        discountType TEXT,
+        discountAmount REAL,
+        netAmount REAL,
+        taxType TEXT,
+        taxAmount REAL,
+        finalBillAmount REAL,
+        transportName TEXT,
+        lrNumber TEXT,
+        lrDate TEXT,
+        bundleQty INTEGER,
+        image BLOB,
+        createdAt TEXT,
+        updatedAt TEXT,
+        FOREIGN KEY (customer) REFERENCES customers(id),
+        FOREIGN KEY (supplier) REFERENCES suppliers(id)
+      )
+    ''');
+  }
+
+  Future<List<BillInward>> getBillInwards() async {
+    final db =
+        await database; // Assuming 'database' is a getter that returns the database instance
+    final List<Map<String, dynamic>> maps = await db.query('billInwards');
+
+    return List.generate(maps.length, (i) {
+      return BillInward.fromMap(maps[i]);
+    });
+  }
+
+  Future<void> updateBillInward(BillInward billInward) async {
+    final db = await database;
+    await db.update(
+      'billInwards',
+      billInward.toMap(),
+      where: 'id = ?',
+      whereArgs: [billInward.id],
+    );
+  }
+
+  Future<void> createBillInward(BillInward billInward) async {
+    final db = await database;
+    await db.insert(
+      'billInwards',
+      billInward.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<void> deleteBillInward(BillInward billInward) async {
+    final db = await database;
+    await db.delete(
+      'billInwards',
+      where: 'id = ?',
+      whereArgs: [billInward.id],
     );
   }
 }

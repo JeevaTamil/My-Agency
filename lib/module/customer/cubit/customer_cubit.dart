@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:my_agency/helper/database_helper.dart';
+import 'package:my_agency/helper/database/database_helper.dart';
 import 'package:my_agency/module/customer/model/customer.dart';
 
 part 'customer_state.dart';

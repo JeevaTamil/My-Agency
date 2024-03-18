@@ -11,8 +11,7 @@ class CustomerListingPage extends StatefulWidget {
 }
 
 class _CustomerListingPageState extends State<CustomerListingPage> {
-  TextEditingController _searchController = TextEditingController();
-  List<Customer>? _filteredCustomers;
+  final TextEditingController _searchController = TextEditingController();
   bool _isSearching = false;
 
   @override
@@ -40,16 +39,17 @@ class _CustomerListingPageState extends State<CustomerListingPage> {
             ? TextField(
                 controller: _searchController,
                 autofocus: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Search...',
                   border: InputBorder.none,
                 ),
               )
-            : Text('Customer Listing'),
+            : const Text('Customer Listing'),
         actions: [
           if (!_isSearching)
             IconButton(
-              icon: Icon(Icons.add),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              icon: const Icon(Icons.add),
               onPressed: () {
                 showDialog(
                   context: context,
@@ -64,6 +64,7 @@ class _CustomerListingPageState extends State<CustomerListingPage> {
               },
             ),
           IconButton(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             icon: Icon(_isSearching ? Icons.close : Icons.search),
             onPressed: () {
               setState(() {

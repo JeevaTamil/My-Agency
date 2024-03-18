@@ -5,7 +5,6 @@ import 'package:my_agency/module/navigation/model/nav_model.dart';
 import 'package:my_agency/module/navigation/view/nav_bottom_bar.dart';
 import 'package:my_agency/module/navigation/view/nav_rail.dart';
 
-
 class NavLandingPage extends StatelessWidget {
   const NavLandingPage({super.key});
 
