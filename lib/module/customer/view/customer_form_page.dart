@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_agency/helper/views/form_text_field.dart';
 import 'package:my_agency/module/customer/model/customer.dart';
 import 'package:my_agency/module/customer/cubit/customer_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -110,62 +111,30 @@ class _CustomerFormPageState extends State<CustomerFormPage> {
                 ],
               ),
               const SizedBox(height: 16.0),
-              TextFormField(
+              FormTextField(
                 controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Name',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter a name';
-                  }
-                  return null;
-                },
+                labelText: 'Name',
               ),
               const SizedBox(height: 16.0),
-              TextFormField(
-                maxLines: 3,
+              FormTextField(
                 controller: _addressController,
-                decoration: const InputDecoration(
-                    labelText: 'Address', border: OutlineInputBorder()),
+                labelText: 'Address',
               ),
               const SizedBox(height: 16.0),
-              TextFormField(
+              FormTextField(
                 controller: _cityController,
-                decoration: const InputDecoration(
-                    labelText: 'City', border: OutlineInputBorder()),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter a city';
-                  }
-                  return null;
-                },
+                labelText: 'City',
               ),
               const SizedBox(height: 16.0),
-              TextFormField(
+              FormTextField(
                 controller: _phoneNumberController,
-                decoration: const InputDecoration(
-                    labelText: 'Phone Number', border: OutlineInputBorder()),
-                keyboardType: TextInputType.phone,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter a phone number';
-                  }
-                  return null;
-                },
+                labelText: 'Phone Number',
+                textInputType: TextInputType.phone,
               ),
               const SizedBox(height: 16.0),
-              TextFormField(
+              FormTextField(
                 controller: _gstNumberController,
-                decoration: const InputDecoration(
-                    labelText: 'GST Number', border: OutlineInputBorder()),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter a GST number';
-                  }
-                  return null;
-                },
+                labelText: 'GST Number',
               ),
               const SizedBox(height: 16.0),
               Row(

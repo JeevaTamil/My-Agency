@@ -1,5 +1,5 @@
 class BillInward {
-  String id;
+  int? id;
   String customer;
   String supplier;
   String billNumber;
@@ -46,7 +46,7 @@ class BillInward {
 
   factory BillInward.fromMap(Map<String, dynamic> map) {
     return BillInward(
-      id: map['_id'],
+      id: map['id'],
       customer: map['customer'],
       supplier: map['supplier'],
       billNumber: map['billNumber'],

@@ -73,6 +73,21 @@ class DatabaseHelper {
     });
   }
 
+  Future<Customer?> getCustomer(int customerId) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'customers',
+      where: 'id = ?',
+      whereArgs: [customerId],
+    );
+
+    if (maps.isNotEmpty) {
+      // Assuming your Customer model has a factory constructor fromMap
+      return Customer.fromMap(maps.first);
+    }
+    return null; // Return null if the customer is not found
+  }
+
   Future<void> updateCustomer(Customer customer) async {
     final db = await database;
     await db.update(
@@ -131,6 +146,21 @@ class DatabaseHelper {
     });
   }
 
+  Future<Supplier?> getSupplier(int supplierId) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'suppliers',
+      where: 'id = ?',
+      whereArgs: [supplierId],
+    );
+
+    if (maps.isNotEmpty) {
+      // Assuming your Supplier model has a factory constructor fromMap
+      return Supplier.fromMap(maps.first);
+    }
+    return null; // Return null if the supplier is not found
+  }
+
   Future<void> updateSupplier(Supplier supplier) async {
     final db = await database;
     await db.update(
@@ -164,7 +194,7 @@ class DatabaseHelper {
     final db = await database;
     await db.execute('''
       CREATE TABLE IF NOT EXISTS billInwards(
-        id TEXT PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         customer TEXT,
         supplier TEXT,
         billNumber TEXT,
