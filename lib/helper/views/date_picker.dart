@@ -25,6 +25,12 @@ class _DatePickerState extends State<DatePicker> {
         labelText: widget.labelText,
         border: OutlineInputBorder(),
       ),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Field cannot be empty';
+        }
+        return null;
+      },
     );
   }
 

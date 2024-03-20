@@ -30,6 +30,8 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
   late TextEditingController _billNumberController;
   late TextEditingController _billDate;
 
+  late TextEditingController _dummy;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -38,6 +40,7 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
         TextEditingController(text: widget.billInward?.billNumber ?? '');
     _billDate = TextEditingController(
         text: widget.billInward?.billDate.toString() ?? '');
+    _dummy = TextEditingController();
   }
 
   @override
@@ -75,8 +78,22 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
                     icon: const Icon(Icons.close_rounded)),
               ],
             ),
+            Row(
+              children: [
+                Text('Hello'),
+                Spacer(),
+                Text('world'),
+              ],
+            ),
             SupplierSearchDropDown(
                 optionItemSelected: supplierOptionItemSelected),
+            Row(
+              children: [
+                FormTextField(controller: _dummy, labelText: 'hlllo'),
+                Spacer(),
+                Text('world'),
+              ],
+            ),
             customerSearchDropDown(
                 optionItemSelected: customerOptionItemSelected),
             FormTextField(
