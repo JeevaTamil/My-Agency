@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:my_agency/helper/views/customer_search_dropdown_widget.dart';
@@ -29,7 +31,6 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
   TextEditingController controller = TextEditingController();
   late TextEditingController _billNumberController;
   late TextEditingController _billDate;
-
   late TextEditingController _dummy;
 
   @override
@@ -78,34 +79,30 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
                     icon: const Icon(Icons.close_rounded)),
               ],
             ),
-            Row(
-              children: [
-                Text('Hello'),
-                Spacer(),
-                Text('world'),
-              ],
-            ),
             SupplierSearchDropDown(
                 optionItemSelected: supplierOptionItemSelected),
+            SizedBox(height: 16.0),
+            CustomerSearchDropDown(
+                optionItemSelected: customerOptionItemSelected),
+            SizedBox(height: 16.0),
             Row(
               children: [
-                FormTextField(controller: _dummy, labelText: 'hlllo'),
-                Spacer(),
-                Text('world'),
+                Expanded(
+                  child: FormTextField(
+                    controller: _billNumberController,
+                    labelText: 'Bill Number',
+                  ),
+                ),
+                SizedBox(
+                  width: 16.0,
+                ),
+                Expanded(
+                  child: DatePicker(
+                    controller: _billDate,
+                    labelText: 'Bill Date',
+                  ),
+                ),
               ],
-            ),
-            customerSearchDropDown(
-                optionItemSelected: customerOptionItemSelected),
-            FormTextField(
-              controller: _billNumberController,
-              labelText: 'Bill Number',
-            ),
-            const SizedBox(
-              height: 16.0,
-            ),
-            DatePicker(
-              controller: _billDate,
-              labelText: 'Bill Date',
             ),
             const SizedBox(
               height: 16.0,

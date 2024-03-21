@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
         title: 'My Agency',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          brightness: Brightness.dark,
           primarySwatch: Colors.blue,
           appBarTheme: const AppBarTheme(
             backgroundColor:
