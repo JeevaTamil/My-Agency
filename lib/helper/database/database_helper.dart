@@ -22,29 +22,44 @@ class DatabaseHelper {
   DatabaseHelper.internal();
 
   Future<Database> initDatabase() async {
+    print('opening database');
     String databasesPath = await getDatabasesPath();
     String path = join(databasesPath, 'my_database.db');
 
     return await openDatabase(
       path,
-      version: 3, // Increment the version number
+      version: 1, // Increment the version number
       onCreate: (Database db, int version) async {
+        print('database on create');
         createCustomerTable();
         createSupplierTable();
         createBillInwardTable();
       },
-      onUpgrade: (Database db, int oldVersion, int newVersion) async {
-        if (oldVersion < 2) {
-          createSupplierTable();
-        } else if (oldVersion < 3) {
-          createBillInwardTable();
-        }
-      },
+      // onUpgrade: (Database db, int oldVersion, int newVersion) async {
+      //   if (oldVersion < 2) {
+      //     createSupplierTable();
+      //     createBillInwardTable();
+      //   }
+      // },
     );
+  }
+
+  Future<void> flushDatabaseAndStartFreshly() async {
+    print('flush db');
+    String databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, 'my_database.db');
+
+    // Delete the existing database
+    await deleteDatabase(path);
+
+    // Reinitialize the database
+    _database = null; // Ensure the cached database instance is reset
+    await initDatabase(); // This will recreate the database
   }
 
   // Customer Related methods
   Future<void> createCustomerTable() async {
+    print('database on createCustomerTable');
     final db = await database;
     await db.execute('''
           CREATE TABLE IF NOT EXISTS customers (
@@ -118,6 +133,7 @@ class DatabaseHelper {
 
   // Supplier Related methods
   Future<void> createSupplierTable() async {
+    print('database on createSupplierTable');
     final db = await database;
     await db.execute('''
           CREATE TABLE IF NOT EXISTS suppliers (
@@ -127,6 +143,7 @@ class DatabaseHelper {
             city TEXT NOT NULL,
             phn_number INTEGER NOT NULL,
             gst_number TEXT NOT NULL UNIQUE,
+            commission INTEGER NOT NULL DEFAULT 2,
             created_at INTEGER NOT NULL,
             updated_at INTEGER NOT NULL
           )
@@ -191,6 +208,7 @@ class DatabaseHelper {
 
   // Bill Inward related methods
   Future<void> createBillInwardTable() async {
+    print('database on createBillInwardTable');
     final db = await database;
     await db.execute('''
       CREATE TABLE IF NOT EXISTS billInwards(

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:my_agency/helper/views/form_text_field.dart';
+import 'package:my_agency/helper/views/form_title.dart';
 import 'package:my_agency/module/supplier/model/supplier.dart';
 import 'package:my_agency/module/supplier/cubit/supplier_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+const List<String> _commisionOptionItems = <String>['2', '3', '4', '5'];
 
 class SupplierFormPage extends StatefulWidget {
   final Supplier? supplier; // Optional parameter to pass a supplier for editing
@@ -19,6 +23,8 @@ class _SupplierFormPageState extends State<SupplierFormPage> {
   late TextEditingController _cityController;
   late TextEditingController _phoneNumberController;
   late TextEditingController _gstNumberController;
+
+  int _commissionPercentage = int.parse(_commisionOptionItems.first);
 
   @override
   void initState() {
@@ -58,6 +64,7 @@ class _SupplierFormPageState extends State<SupplierFormPage> {
           city: city,
           phoneNumber: phoneNumber,
           gstNumber: gstNumber,
+          commission: _commissionPercentage,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         );
@@ -71,6 +78,7 @@ class _SupplierFormPageState extends State<SupplierFormPage> {
           city: city,
           phoneNumber: phoneNumber,
           gstNumber: gstNumber,
+          commission: _commissionPercentage,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         );
@@ -92,88 +100,72 @@ class _SupplierFormPageState extends State<SupplierFormPage> {
           key: _formKey,
           child: Column(
             children: [
+              FormTitle(
+                isEdit: widget.supplier != null,
+                title: 'Supplier',
+              ),
+              const SizedBox(height: 16.0),
+              FormTextField(
+                controller: _nameController,
+                labelText: 'Name',
+                isMandatory: true,
+              ),
+              const SizedBox(height: 16.0),
+              FormTextField(
+                controller: _addressController,
+                labelText: 'Address',
+                textInputType: TextInputType.streetAddress,
+              ),
+              const SizedBox(height: 16.0),
+              FormTextField(
+                controller: _cityController,
+                labelText: 'City',
+                isMandatory: true,
+              ),
+              const SizedBox(height: 16.0),
+              FormTextField(
+                controller: _phoneNumberController,
+                labelText: 'Phone Number',
+                textInputType: TextInputType.phone,
+                isMandatory: true,
+              ),
+              const SizedBox(height: 16.0),
+              FormTextField(
+                controller: _gstNumberController,
+                labelText: 'GST Number',
+                isMandatory: true,
+              ),
+              const SizedBox(height: 16.0),
               Row(
                 children: [
-                  Text(
-                    widget.supplier != null ? 'Edit Supplier' : 'Add Supplier',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0,
-                    ),
+                  const Expanded(
+                    child: Text('Agent Commission Percentage'),
                   ),
-                  const Spacer(),
-                  IconButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      icon: const Icon(Icons.close_rounded)),
+                  DropdownButton(
+                    // icon: const Icon(Icons.percent),
+                    decoration: const InputDecoration(
+  border: OutlineInputBorder(),
+),
+                    value: _commissionPercentage.toString(),
+                    items: _commisionOptionItems
+                        .map((e) => DropdownMenuItem<String>(
+                              value: e,
+                              child: Text(e),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        if (value != null) {
+                          _commissionPercentage = int.parse(value);
+                        }
+                      });
+                    },
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text('%'),
+                  ),
                 ],
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Name',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter a name';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                maxLines: 3,
-                controller: _addressController,
-                decoration: const InputDecoration(
-                  labelText: 'Address',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _cityController,
-                decoration: const InputDecoration(
-                  labelText: 'City',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter a city';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _phoneNumberController,
-                decoration: const InputDecoration(
-                  labelText: 'Phone Number',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.phone,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter a phone number';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _gstNumberController,
-                decoration: const InputDecoration(
-                  labelText: 'GST Number',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter a GST number';
-                  }
-                  return null;
-                },
               ),
               const SizedBox(height: 16.0),
               Row(

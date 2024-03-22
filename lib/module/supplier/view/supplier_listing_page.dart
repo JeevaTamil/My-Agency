@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_agency/helper/views/list_empty_state_widget.dart';
 import 'package:my_agency/module/supplier/model/supplier.dart';
 import 'package:my_agency/module/supplier/cubit/supplier_cubit.dart';
 import 'package:my_agency/module/supplier/view/supplier_detail_page.dart';
@@ -91,6 +92,9 @@ class _SupplierListingPageState extends State<SupplierListingPage> {
                 );
               } else if (snapshot.hasData) {
                 final suppliers = snapshot.data!;
+                if (suppliers.isEmpty) {
+                  return const ListEmptyStateWidget();
+                }
                 return ListView.builder(
                   itemCount: suppliers.length,
                   itemBuilder: (context, index) {

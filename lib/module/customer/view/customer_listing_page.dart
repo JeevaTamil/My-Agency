@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_agency/helper/views/list_empty_state_widget.dart';
 import 'package:my_agency/module/customer/model/customer.dart';
 import 'package:my_agency/module/customer/cubit/customer_cubit.dart';
 import 'package:my_agency/module/customer/view/customer_detail_page.dart';
@@ -93,6 +94,9 @@ class _CustomerListingPageState extends State<CustomerListingPage> {
                 );
               } else if (snapshot.hasData) {
                 final customers = snapshot.data!;
+                if (customers.isEmpty) {
+                  return const ListEmptyStateWidget();
+                }
                 return ListView.builder(
                   itemCount: customers.length,
                   itemBuilder: (context, index) {

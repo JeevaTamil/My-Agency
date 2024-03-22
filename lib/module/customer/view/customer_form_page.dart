@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_agency/helper/views/form_text_field.dart';
+import 'package:my_agency/helper/views/form_title.dart';
 import 'package:my_agency/module/customer/model/customer.dart';
 import 'package:my_agency/module/customer/cubit/customer_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -93,27 +94,15 @@ class _CustomerFormPageState extends State<CustomerFormPage> {
           key: _formKey,
           child: Column(
             children: [
-              Row(
-                children: [
-                  Text(
-                    widget.customer != null ? 'Edit Customer' : 'Add Customer',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      icon: const Icon(Icons.close_rounded)),
-                ],
+              FormTitle(
+                isEdit: widget.customer != null,
+                title: 'Customer',
               ),
               const SizedBox(height: 16.0),
               FormTextField(
                 controller: _nameController,
                 labelText: 'Name',
+                isMandatory: true,
               ),
               const SizedBox(height: 16.0),
               FormTextField(
@@ -124,17 +113,20 @@ class _CustomerFormPageState extends State<CustomerFormPage> {
               FormTextField(
                 controller: _cityController,
                 labelText: 'City',
+                isMandatory: true,
               ),
               const SizedBox(height: 16.0),
               FormTextField(
                 controller: _phoneNumberController,
                 labelText: 'Phone Number',
                 textInputType: TextInputType.phone,
+                isMandatory: true,
               ),
               const SizedBox(height: 16.0),
               FormTextField(
                 controller: _gstNumberController,
                 labelText: 'GST Number',
+                isMandatory: true,
               ),
               const SizedBox(height: 16.0),
               Row(

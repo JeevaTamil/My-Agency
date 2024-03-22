@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:my_agency/helper/views/customer_search_dropdown_widget.dart';
 import 'package:my_agency/helper/views/date_picker.dart';
 import 'package:my_agency/helper/views/form_text_field.dart';
+import 'package:my_agency/helper/views/form_title.dart';
 import 'package:my_agency/helper/views/supplier_search_dropdown_widget.dart';
 import 'package:my_agency/module/bill_inward/model/bill_inward.dart';
 import 'package:dropdown_model_list/dropdown_model_list.dart';
@@ -31,7 +32,6 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
   TextEditingController controller = TextEditingController();
   late TextEditingController _billNumberController;
   late TextEditingController _billDate;
-  late TextEditingController _dummy;
 
   @override
   void initState() {
@@ -41,7 +41,6 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
         TextEditingController(text: widget.billInward?.billNumber ?? '');
     _billDate = TextEditingController(
         text: widget.billInward?.billDate.toString() ?? '');
-    _dummy = TextEditingController();
   }
 
   @override
@@ -60,31 +59,16 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
         key: _formKey,
         child: Column(
           children: [
-            Row(
-              children: [
-                Text(
-                  widget.billInward != null
-                      ? 'Edit Bill Inward'
-                      : 'Add Bill Inward',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0,
-                  ),
-                ),
-                const Spacer(),
-                IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: const Icon(Icons.close_rounded)),
-              ],
+            FormTitle(
+              isEdit: widget.billInward != null,
+              title: 'Bill Inward',
             ),
             SupplierSearchDropDown(
                 optionItemSelected: supplierOptionItemSelected),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             CustomerSearchDropDown(
                 optionItemSelected: customerOptionItemSelected),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             Row(
               children: [
                 Expanded(
@@ -93,9 +77,7 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
                     labelText: 'Bill Number',
                   ),
                 ),
-                SizedBox(
-                  width: 16.0,
-                ),
+                const SizedBox(width: 16.0),
                 Expanded(
                   child: DatePicker(
                     controller: _billDate,
@@ -104,9 +86,7 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
                 ),
               ],
             ),
-            const SizedBox(
-              height: 16.0,
-            ),
+            const SizedBox(height: 16.0),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,

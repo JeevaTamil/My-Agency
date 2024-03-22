@@ -5,6 +5,7 @@ class Supplier {
   String city;
   int phoneNumber;
   String gstNumber;
+  int commission;
   DateTime createdAt;
   DateTime updatedAt;
 
@@ -15,6 +16,7 @@ class Supplier {
     required this.city,
     required this.phoneNumber,
     required this.gstNumber,
+    required this.commission,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -27,6 +29,7 @@ class Supplier {
       'city': city,
       'phn_number': phoneNumber,
       'gst_number': gstNumber,
+      'commission': commission,
       'created_at': createdAt.millisecondsSinceEpoch,
       'updated_at': updatedAt.millisecondsSinceEpoch,
     };
@@ -40,6 +43,7 @@ class Supplier {
       city: map['city'],
       phoneNumber: map['phn_number'],
       gstNumber: map['gst_number'],
+      commission: map['commission'],
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['created_at']),
       updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updated_at']),
     );
