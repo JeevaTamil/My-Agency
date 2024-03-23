@@ -1,23 +1,19 @@
-import 'dart:ffi';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:my_agency/helper/utils/widget_util/currency_text_input_formatter.dart';
 import 'package:my_agency/helper/views/customer_search_dropdown_widget.dart';
 import 'package:my_agency/helper/views/date_picker.dart';
 import 'package:my_agency/helper/views/form_text_field.dart';
 import 'package:my_agency/helper/views/form_title.dart';
 import 'package:my_agency/helper/views/supplier_search_dropdown_widget.dart';
 import 'package:my_agency/module/bill_inward/model/bill_inward.dart';
-import 'package:dropdown_model_list/dropdown_model_list.dart';
-import 'package:my_agency/module/supplier/cubit/supplier_cubit.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter/services.dart';
 
 class BillInwardFormPage extends StatefulWidget {
   final BillInward?
       billInward; // Pass billInward for editing, null for creating
 
-  const BillInwardFormPage({Key? key, this.billInward}) : super(key: key);
+  const BillInwardFormPage({super.key, this.billInward});
 
   @override
   State<BillInwardFormPage> createState() => _BillInwardFormPageState();
@@ -25,13 +21,32 @@ class BillInwardFormPage extends StatefulWidget {
 
 class _BillInwardFormPageState extends State<BillInwardFormPage> {
   final _formKey = GlobalKey<FormState>();
+  final CurrencyTextInputFormatter _discountValcurrencyTextInputFormatter =
+      CurrencyTextInputFormatter(
+    locale: 'hi_IN',
+    symbol: '₹',
+    decimalDigits: 2,
+  );
 
-  OptionItem supplierOptionItemSelected = OptionItem(title: "Select Supplier");
-  OptionItem customerOptionItemSelected = OptionItem(title: "Select Customer");
+  final CurrencyTextInputFormatter _billAmountcurrencyTextInputFormatter =
+      CurrencyTextInputFormatter(
+    locale: 'hi_IN',
+    symbol: '₹',
+    decimalDigits: 2,
+  );
+
+  late int selectedCustomerId = -1;
+  late int selectedSupplierId = -1;
+  late double _netAmount = 0.00;
+
+  String selectedDiscountType = '%';
 
   TextEditingController controller = TextEditingController();
   late TextEditingController _billNumberController;
   late TextEditingController _billDate;
+  late TextEditingController _productQty;
+  late TextEditingController _billAmount;
+  late TextEditingController _discountValue;
 
   @override
   void initState() {
@@ -41,6 +56,12 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
         TextEditingController(text: widget.billInward?.billNumber ?? '');
     _billDate = TextEditingController(
         text: widget.billInward?.billDate.toString() ?? '');
+    _productQty = TextEditingController(
+        text: widget.billInward?.productQty.toString() ?? '');
+    _billAmount = TextEditingController(
+        text: widget.billInward?.billAmount.toString() ?? '');
+    _discountValue = TextEditingController(
+        text: widget.billInward?.discountAmount.toString() ?? '');
   }
 
   @override
@@ -64,10 +85,16 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
               title: 'Bill Inward',
             ),
             SupplierSearchDropDown(
-                optionItemSelected: supplierOptionItemSelected),
+              supplierSelected: (int supplierId) {
+                _supplierSelected(supplierId);
+              },
+            ),
             const SizedBox(height: 16.0),
             CustomerSearchDropDown(
-                optionItemSelected: customerOptionItemSelected),
+              customerSelected: (int customerId) {
+                _customerSelected(customerId);
+              },
+            ),
             const SizedBox(height: 16.0),
             Row(
               children: [
@@ -75,6 +102,7 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
                   child: FormTextField(
                     controller: _billNumberController,
                     labelText: 'Bill Number',
+                    isMandatory: true,
                   ),
                 ),
                 const SizedBox(width: 16.0),
@@ -86,6 +114,94 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
                 ),
               ],
             ),
+            const SizedBox(height: 16.0),
+            Row(
+              children: [
+                Expanded(
+                  child: FormTextField(
+                    controller: _productQty,
+                    labelText: 'Product Qty',
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    textInputType: TextInputType.number,
+                    isMandatory: true,
+                  ),
+                ),
+                const SizedBox(width: 16.0),
+                Expanded(
+                  child: FormTextField(
+                    isMandatory: true,
+                    controller: _billAmount,
+                    labelText: 'Bill Amount',
+                    textInputType: TextInputType.number,
+                    inputFormatters: [_billAmountcurrencyTextInputFormatter],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16.0),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      Text('Discount Type'),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      SegmentedButton(
+                        segments: const [
+                          ButtonSegment(
+                            value: '%',
+                            icon: Icon(Icons.percent_outlined),
+                          ),
+                          ButtonSegment(
+                            value: '₹',
+                            icon: Icon(Icons.currency_rupee),
+                          ),
+                        ],
+                        selected: <String>{selectedDiscountType},
+                        onSelectionChanged: (value) {
+                          setState(() {
+                            selectedDiscountType = value.first;
+                            _discountValue.text = '';
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 16.0),
+                Expanded(
+                  child: FormTextField(
+                    isMandatory: true,
+                    maxLength: selectedDiscountType == '%' ? 1 : 15,
+                    controller: _discountValue,
+                    labelText: 'Discount Value',
+                    textInputType: TextInputType.number,
+                    inputFormatters: selectedDiscountType == '%'
+                        ? []
+                        : [_discountValcurrencyTextInputFormatter],
+                    onChanged: (value) {
+                      setState(() {
+                        _getNetAmount(value);
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16.0),
+            const Divider(),
+            const SizedBox(height: 16.0),
+            Row(
+              children: [
+                Text('Net Amount'),
+                Spacer(),
+                Expanded(child: Text('₹' + _netAmount.toString()))
+              ],
+            ),
+            const SizedBox(height: 16.0),
+            const Divider(),
             const SizedBox(height: 16.0),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -101,7 +217,7 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
                   ),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
@@ -109,10 +225,50 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
   }
 
   void _saveBillInward() async {
-    if (_formKey.currentState!.validate()) {
+    bool isCustomerSelected = selectedCustomerId != -1;
+    bool isSupplierSelected = selectedSupplierId != -1;
+    if (_formKey.currentState!.validate() &&
+        isSupplierSelected &&
+        isCustomerSelected) {
       print('validated');
+      print('selectedCustomerId $selectedCustomerId');
+      print('selectedSupplierId $selectedSupplierId');
+      print(_billAmount.text);
     } else {
       print('validation failed');
     }
+  }
+
+  void _customerSelected(int customerId) {
+    setState(() {
+      selectedCustomerId = customerId;
+    });
+  }
+
+  void _supplierSelected(int supplierId) {
+    setState(() {
+      selectedSupplierId = supplierId;
+    });
+  }
+
+  void _getNetAmount(String discountValue) {
+    double netAmount = 0;
+    try {
+      double billAmount = _billAmountcurrencyTextInputFormatter
+          .getUnformattedValue()
+          .toDouble();
+      double discount = 0.00;
+      if (selectedDiscountType == '%') {
+        discount = ((double.parse(discountValue) * billAmount) / 100);
+      } else {
+        discount = _discountValcurrencyTextInputFormatter
+            .getUnformattedValue()
+            .toDouble();
+      }
+      netAmount = billAmount - discount;
+    } catch (FormatException) {
+      //print(e);
+    }
+    _netAmount = netAmount;
   }
 }

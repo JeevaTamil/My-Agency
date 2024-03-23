@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:dropdown_model_list/dropdown_model_list.dart';
 import 'package:my_agency/helper/views/form_search_bar.dart';
 import 'package:my_agency/module/supplier/cubit/supplier_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+typedef void IntCallback(int id);
+
 class SupplierSearchDropDown extends StatefulWidget {
-  SupplierSearchDropDown({super.key, required this.optionItemSelected});
-  OptionItem optionItemSelected;
+  const SupplierSearchDropDown({super.key, required this.supplierSelected});
+  final IntCallback supplierSelected;
 
   @override
   State<SupplierSearchDropDown> createState() => _SupplierSearchDropDownState();
@@ -31,9 +32,16 @@ class _SupplierSearchDropDownState extends State<SupplierSearchDropDown> {
               future: state.suppliers,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return FormSearchBar(
-                    searchableList: snapshot.data!,
-                    hintText: 'Select Supplier',
+                  return Column(
+                    children: [
+                      FormSearchBar(
+                        searchableList: snapshot.data!,
+                        hintText: 'Select Supplier',
+                        itemSelected: (int selectedItemId) {
+                          widget.supplierSelected(selectedItemId);
+                        },
+                      ),
+                    ],
                   );
                 } else {
                   return const Text("No Data found");

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:dropdown_model_list/dropdown_model_list.dart';
 import 'package:my_agency/helper/views/form_search_bar.dart';
+import 'package:my_agency/helper/views/supplier_search_dropdown_widget.dart';
 import 'package:my_agency/module/customer/cubit/customer_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CustomerSearchDropDown extends StatefulWidget {
-  CustomerSearchDropDown({super.key, required this.optionItemSelected});
-  OptionItem optionItemSelected;
+  const CustomerSearchDropDown({super.key, required this.customerSelected});
+  final IntCallback customerSelected;
 
   @override
   State<CustomerSearchDropDown> createState() => _CustomerSearchDropDownState();
@@ -32,6 +32,9 @@ class _CustomerSearchDropDownState extends State<CustomerSearchDropDown> {
                 return FormSearchBar(
                   searchableList: snapshot.data!,
                   hintText: 'Select Customer',
+                  itemSelected: (int selectedItemId) {
+                    widget.customerSelected(selectedItemId);
+                  },
                 );
               } else {
                 return const Text("No Data found");

@@ -143,9 +143,6 @@ class _SupplierFormPageState extends State<SupplierFormPage> {
                   ),
                   DropdownButton(
                     // icon: const Icon(Icons.percent),
-                    decoration: const InputDecoration(
-  border: OutlineInputBorder(),
-),
                     value: _commissionPercentage.toString(),
                     items: _commisionOptionItems
                         .map((e) => DropdownMenuItem<String>(
