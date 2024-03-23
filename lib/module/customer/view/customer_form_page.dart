@@ -80,7 +80,7 @@ class _CustomerFormPageState extends State<CustomerFormPage> {
         BlocProvider.of<CustomerCubit>(context).updateCustomer(customer);
       }
 
-      Navigator.pop(context);
+      Navigator.pop(context); 
     }
   }
 

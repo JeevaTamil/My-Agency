@@ -1,13 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:my_agency/helper/database/database_helper.dart';
 import 'package:my_agency/helper/utils/widget_util/currency_text_input_formatter.dart';
 import 'package:my_agency/helper/views/customer_search_dropdown_widget.dart';
 import 'package:my_agency/helper/views/date_picker.dart';
 import 'package:my_agency/helper/views/form_text_field.dart';
 import 'package:my_agency/helper/views/form_title.dart';
 import 'package:my_agency/helper/views/supplier_search_dropdown_widget.dart';
+import 'package:my_agency/module/bill_inward/cubit/bill_inward_cubit.dart';
 import 'package:my_agency/module/bill_inward/model/bill_inward.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class BillInwardFormPage extends StatefulWidget {
   final BillInward?
@@ -59,6 +63,10 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    if (widget.billInward != null) {
+      selectedCustomerId = int.parse(widget.billInward!.customer);
+      selectedSupplierId = int.parse(widget.billInward!.supplier);
+    }
     _billNumberController =
         TextEditingController(text: widget.billInward?.billNumber ?? '');
     _billDate = TextEditingController(
@@ -356,9 +364,41 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
       print(selectedTaxType);
       print(_taxAmount);
       print(_finalBillAmount);
+
+      if (widget.billInward == null) {
+        final billInward = BillInward(
+          customer: selectedCustomerId.toString(),
+          supplier: selectedCustomerId.toString(),
+          billNumber: _billNumberController.text,
+          billDate: DateFormat('dd-MM-yyyy').parse(_billDate.text),
+          productQty: int.parse(_productQty.text),
+          billAmount: _billAmountcurrencyTextInputFormatter
+              .getUnformattedValue()
+              .toDouble(),
+          discountType: selectedDiscountType,
+          discountAmount: _discountValcurrencyTextInputFormatter
+              .getUnformattedValue()
+              .toDouble(),
+          netAmount: _netAmount,
+          taxType: selectedTaxType,
+          taxAmount: _taxAmount,
+          finalBillAmount: _finalBillAmount,
+          transportName: _transportName.text,
+          lrNumber: _lrNumber.text,
+          lrDate: DateFormat('dd-MM-yyyy').parse(_lrDate.text),
+          bundleQty: int.parse(_bundleQty.text),
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        );
+
+        print(billInward);
+
+        BlocProvider.of<BillInwardCubit>(context).createBillInward(billInward);
+      } else {}
     } else {
       print('validation failed');
     }
+    Navigator.pop(context);
   }
 
   void _customerSelected(int customerId) {

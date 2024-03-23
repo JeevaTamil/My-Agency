@@ -22,7 +22,7 @@ class BillInward {
   DateTime updatedAt;
 
   BillInward({
-    required this.id,
+    this.id,
     required this.customer,
     required this.supplier,
     required this.billNumber,
@@ -60,8 +60,8 @@ class BillInward {
       taxAmount: map['taxAmount'].toDouble(),
       finalBillAmount: map['finalBillAmount'].toDouble(),
       transportName: map['transportName'],
-      lrNumber: map['LRNumber'],
-      lrDate: DateTime.parse(map['LRDate']),
+      lrNumber: map['lrNumber'],
+      lrDate: DateTime.parse(map['lrDate']),
       bundleQty: map['bundleQty'],
       image: map['image'], // You may need to handle image conversion separately
       createdAt: DateTime.parse(map['createdAt']),
@@ -71,7 +71,7 @@ class BillInward {
 
   Map<String, dynamic> toMap() {
     return {
-      '_id': id,
+      'id': id,
       'customer': customer,
       'supplier': supplier,
       'billNumber': billNumber,
