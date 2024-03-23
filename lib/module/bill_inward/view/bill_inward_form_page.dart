@@ -38,8 +38,11 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
   late int selectedCustomerId = -1;
   late int selectedSupplierId = -1;
   late double _netAmount = 0.00;
+  late double _taxAmount = 0.00;
+  late double _finalBillAmount = 0.00;
 
   String selectedDiscountType = '%';
+  String selectedTaxType = 'C/S GST 5';
 
   TextEditingController controller = TextEditingController();
   late TextEditingController _billNumberController;
@@ -47,6 +50,10 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
   late TextEditingController _productQty;
   late TextEditingController _billAmount;
   late TextEditingController _discountValue;
+  late TextEditingController _transportName;
+  late TextEditingController _lrNumber;
+  late TextEditingController _lrDate;
+  late TextEditingController _bundleQty;
 
   @override
   void initState() {
@@ -62,6 +69,14 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
         text: widget.billInward?.billAmount.toString() ?? '');
     _discountValue = TextEditingController(
         text: widget.billInward?.discountAmount.toString() ?? '');
+    _transportName = TextEditingController(
+        text: widget.billInward?.transportName.toString() ?? '');
+    _lrNumber = TextEditingController(
+        text: widget.billInward?.lrNumber.toString() ?? '');
+    _lrDate =
+        TextEditingController(text: widget.billInward?.lrDate.toString() ?? '');
+    _bundleQty = TextEditingController(
+        text: widget.billInward?.bundleQty.toString() ?? '');
   }
 
   @override
@@ -70,6 +85,13 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
     super.dispose();
     _billNumberController.dispose();
     _billDate.dispose();
+    _productQty.dispose();
+    _billAmount.dispose();
+    _discountValue.dispose();
+    _transportName.dispose();
+    _lrNumber.dispose();
+    _lrDate.dispose();
+    _bundleQty.dispose();
   }
 
   @override
@@ -183,7 +205,7 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
                         : [_discountValcurrencyTextInputFormatter],
                     onChanged: (value) {
                       setState(() {
-                        _getNetAmount(value);
+                        _amountCalculation(value);
                       });
                     },
                   ),
@@ -195,13 +217,104 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
             const SizedBox(height: 16.0),
             Row(
               children: [
-                Text('Net Amount'),
-                Spacer(),
-                Expanded(child: Text('₹' + _netAmount.toString()))
+                const Text('Net Amount'),
+                const Spacer(),
+                Expanded(child: Text('₹ $_netAmount'))
               ],
             ),
             const SizedBox(height: 16.0),
             const Divider(),
+            const SizedBox(
+              height: 16.0,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      const Text('Tax Type'),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      SegmentedButton(
+                        segments: const [
+                          ButtonSegment(
+                            value: 'C/S GST 5',
+                            label: Text('C/S GST 5'),
+                          ),
+                          ButtonSegment(
+                            value: 'I GST 5',
+                            label: Text('I GST 5'),
+                          ),
+                          ButtonSegment(
+                            value: 'I GST 12',
+                            label: Text('I GST 12'),
+                          ),
+                        ],
+                        selected: <String>{selectedTaxType},
+                        onSelectionChanged: (value) {
+                          setState(() {
+                            selectedTaxType = value.first;
+                            _taxCalculation();
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 16.0),
+                Expanded(
+                  child: Text('₹ $_taxAmount'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16.0),
+            const Divider(),
+            const SizedBox(height: 16.0),
+            Row(
+              children: [
+                const Text('Final Bill Amount'),
+                const Spacer(),
+                Expanded(child: Text('₹ $_finalBillAmount'))
+              ],
+            ),
+            const SizedBox(height: 16.0),
+            const Divider(),
+            FormTextField(
+              controller: _transportName,
+              labelText: 'Transport Name',
+              isMandatory: true,
+            ),
+            const SizedBox(height: 16.0),
+            Row(
+              children: [
+                Expanded(
+                  child: FormTextField(
+                    controller: _lrNumber,
+                    labelText: 'LR Number',
+                    isMandatory: true,
+                  ),
+                ),
+                const SizedBox(width: 16.0),
+                Expanded(
+                  child: DatePicker(
+                    controller: _lrDate,
+                    labelText: 'LR Date',
+                  ),
+                ),
+                const SizedBox(width: 16.0),
+                Expanded(
+                  child: FormTextField(
+                    controller: _bundleQty,
+                    labelText: 'Bundle Qty',
+                    isMandatory: true,
+                    textInputType: TextInputType.number,
+                    maxLength: 2,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  ),
+                ),
+              ],
+            ),
             const SizedBox(height: 16.0),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -233,7 +346,16 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
       print('validated');
       print('selectedCustomerId $selectedCustomerId');
       print('selectedSupplierId $selectedSupplierId');
+      print(_billNumberController.text);
       print(_billAmount.text);
+      print(_productQty.text);
+      print(_billAmount.text);
+      print(selectedDiscountType);
+      print(_discountValue.text);
+      print(_netAmount);
+      print(selectedTaxType);
+      print(_taxAmount);
+      print(_finalBillAmount);
     } else {
       print('validation failed');
     }
@@ -251,7 +373,7 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
     });
   }
 
-  void _getNetAmount(String discountValue) {
+  void _amountCalculation(String discountValue) {
     double netAmount = 0;
     try {
       double billAmount = _billAmountcurrencyTextInputFormatter
@@ -270,5 +392,21 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
       //print(e);
     }
     _netAmount = netAmount;
+
+    if ((selectedTaxType == 'C/S GST 5') || (selectedTaxType == 'I GST 5')) {
+      _taxAmount = ((_netAmount * 5) / 100);
+    } else {
+      _taxAmount = ((_netAmount * 12) / 100);
+    }
+    _finalBillAmount = _netAmount + _taxAmount;
+  }
+
+  void _taxCalculation() {
+    if ((selectedTaxType == 'C/S GST 5') || (selectedTaxType == 'I GST 5')) {
+      _taxAmount = ((_netAmount * 5) / 100);
+    } else {
+      _taxAmount = ((_netAmount * 12) / 100);
+    }
+    _finalBillAmount = _netAmount + _taxAmount;
   }
 }

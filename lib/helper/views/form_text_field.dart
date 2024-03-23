@@ -12,6 +12,7 @@ class FormTextField extends StatefulWidget {
     this.inputFormatters = const [],
     this.maxLength = 25,
     this.onChanged,
+    this.enabled = true,
   });
   final TextEditingController controller;
   final String labelText;
@@ -20,6 +21,7 @@ class FormTextField extends StatefulWidget {
   final List<TextInputFormatter> inputFormatters;
   final int maxLength;
   final void Function(String)? onChanged;
+  final bool enabled;
 
   @override
   State<FormTextField> createState() => _FormTextFieldState();
@@ -44,6 +46,7 @@ class _FormTextFieldState extends State<FormTextField> {
         }
         return null;
       },
+      enabled: widget.enabled,
     );
   }
 }
