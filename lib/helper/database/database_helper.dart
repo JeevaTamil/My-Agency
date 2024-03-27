@@ -1,4 +1,5 @@
 import 'package:my_agency/module/bill_inward/model/bill_inward.dart';
+import 'package:my_agency/module/bill_inward/model/bill_inward_with_details.dart';
 import 'package:my_agency/module/customer/model/customer.dart';
 import 'package:my_agency/module/supplier/model/supplier.dart';
 import 'package:sqflite/sqflite.dart';
@@ -213,8 +214,8 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE IF NOT EXISTS billInwards(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        customer TEXT,
-        supplier TEXT,
+        customer INTEGER,
+        supplier INTEGER,
         billNumber TEXT,
         billDate TEXT,
         productQty INTEGER,
@@ -237,6 +238,27 @@ class DatabaseHelper {
       )
     ''');
   }
+
+  Future<List<BillInwardWithDetails>> getBillInwardsWithDetails() async {
+  final db = await database; // Assuming 'database' is a getter that returns the database instance
+
+  final List<Map<String, dynamic>> maps = await db.rawQuery('''
+    SELECT 
+      billInwards.*,
+      customers.name AS customerName,
+      suppliers.name AS supplierName
+    FROM 
+      billInwards
+    INNER JOIN 
+      customers ON billInwards.customer = customers.id
+    INNER JOIN 
+      suppliers ON billInwards.supplier = suppliers.id
+  ''');
+
+  return List.generate(maps.length, (i) {
+    return BillInwardWithDetails.fromMap(maps[i]);
+  });
+}
 
   Future<List<BillInward>> getBillInwards() async {
     final db =

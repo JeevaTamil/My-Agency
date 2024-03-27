@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:my_agency/helper/views/list_empty_state_widget.dart';
 import 'package:my_agency/module/bill_inward/cubit/bill_inward_cubit.dart';
 import 'package:my_agency/module/bill_inward/model/bill_inward.dart';
+import 'package:my_agency/module/bill_inward/model/bill_inward_with_details.dart';
 import 'package:my_agency/module/bill_inward/view/Bill_inward_detail_page.dart';
+import 'package:my_agency/module/bill_inward/view/bill_inward_data_table.dart';
 import 'package:my_agency/module/bill_inward/view/bill_inward_form_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -82,7 +84,7 @@ class _BillInwardListingPageState extends State<BillInwardListingPage> {
       ),
       body: BlocBuilder<BillInwardCubit, BillInwardState>(
         builder: (context, state) {
-          return FutureBuilder<List<BillInward>>(
+          return FutureBuilder<List<BillInwardWithDetails>>(
             future: state.billInwards,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -98,50 +100,8 @@ class _BillInwardListingPageState extends State<BillInwardListingPage> {
                 if (billInwards.isEmpty) {
                   return const ListEmptyStateWidget();
                 } else {
-                  return ListView.builder(
-                    itemCount: billInwards.length,
-                    itemBuilder: (context, index) {
-                      final billInward = billInwards[index];
-                      return ListTile(
-                        title: Text(billInward.supplier),
-                        subtitle: Text(billInward.customer),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                        content: SingleChildScrollView(
-                                      child: BillInwardDetail(
-                                        billInward: billInward,
-                                      ),
-                                    ));
-                                  },
-                                );
-                              },
-                              icon: const Icon(Icons.info_outline),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                        content: SingleChildScrollView(
-                                            child: BillInwardFormPage(
-                                                billInward: billInward)));
-                                  },
-                                );
-                              },
-                              icon: const Icon(Icons.edit_rounded),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                  return BillInwardDataTable(
+                    billInwardWithDetailsList: billInwards.reversed.toList(),
                   );
                 }
               } else {

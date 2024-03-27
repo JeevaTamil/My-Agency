@@ -1,7 +1,7 @@
 class BillInward {
   int? id;
-  String customer;
-  String supplier;
+  int customerId;
+  int supplierId;
   String billNumber;
   DateTime billDate;
   int productQty;
@@ -23,8 +23,8 @@ class BillInward {
 
   BillInward({
     this.id,
-    required this.customer,
-    required this.supplier,
+    required this.customerId,
+    required this.supplierId,
     required this.billNumber,
     required this.billDate,
     required this.productQty,
@@ -47,8 +47,8 @@ class BillInward {
   factory BillInward.fromMap(Map<String, dynamic> map) {
     return BillInward(
       id: map['id'],
-      customer: map['customer'],
-      supplier: map['supplier'],
+      customerId: map['customer'],
+      supplierId: map['supplier'],
       billNumber: map['billNumber'],
       billDate: DateTime.parse(map['billDate']),
       productQty: map['productQty'],
@@ -72,8 +72,8 @@ class BillInward {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'customer': customer,
-      'supplier': supplier,
+      'customer': customerId,
+      'supplier': supplierId,
       'billNumber': billNumber,
       'billDate': billDate.toIso8601String(),
       'productQty': productQty,

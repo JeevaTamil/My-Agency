@@ -2,7 +2,7 @@ part of 'bill_inward_cubit.dart';
 
 @immutable
 sealed class BillInwardState {
-  final Future<List<BillInward>> billInwards;
+  final Future<List<BillInwardWithDetails>> billInwards;
 
   const BillInwardState(this.billInwards);
 }

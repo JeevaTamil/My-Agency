@@ -12,6 +12,7 @@ import 'package:my_agency/module/bill_inward/model/bill_inward.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:my_agency/module/bill_inward/model/bill_inward_with_details.dart';
 
 class BillInwardFormPage extends StatefulWidget {
   final BillInward?
@@ -64,8 +65,8 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
     // TODO: implement initState
     super.initState();
     if (widget.billInward != null) {
-      selectedCustomerId = int.parse(widget.billInward!.customer);
-      selectedSupplierId = int.parse(widget.billInward!.supplier);
+      selectedCustomerId = widget.billInward!.customerId;
+      selectedSupplierId = widget.billInward!.supplierId;
     }
     _billNumberController =
         TextEditingController(text: widget.billInward?.billNumber ?? '');
@@ -367,8 +368,8 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
 
       if (widget.billInward == null) {
         final billInward = BillInward(
-          customer: selectedCustomerId.toString(),
-          supplier: selectedCustomerId.toString(),
+          customerId: selectedCustomerId,
+          supplierId: selectedSupplierId,
           billNumber: _billNumberController.text,
           billDate: DateFormat('dd-MM-yyyy').parse(_billDate.text),
           productQty: int.parse(_productQty.text),
