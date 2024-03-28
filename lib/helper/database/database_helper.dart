@@ -138,13 +138,13 @@ class DatabaseHelper {
     final db = await database;
     await db.execute('''
           CREATE TABLE IF NOT EXISTS suppliers (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            supplier_id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
             address TEXT,
             city TEXT NOT NULL,
-            phn_number INTEGER NOT NULL,
+            phone_number INTEGER NOT NULL,
             gst_number TEXT NOT NULL UNIQUE,
-            commission INTEGER NOT NULL DEFAULT 2,
+            commission_percentage DECIMAL(5,2) CHECK (commission_percentage >= 2 AND commission_percentage <= 5) NOT NULL,
             created_at INTEGER NOT NULL,
             updated_at INTEGER NOT NULL
           )
@@ -185,7 +185,7 @@ class DatabaseHelper {
       'suppliers',
       supplier.toMap(),
       where: 'id = ?',
-      whereArgs: [supplier.id],
+      whereArgs: [supplier.supplierId],
     );
   }
 
@@ -203,7 +203,7 @@ class DatabaseHelper {
     await db.delete(
       'suppliers',
       where: 'id = ?',
-      whereArgs: [supplier.id],
+      whereArgs: [supplier.supplierId],
     );
   }
 
@@ -240,9 +240,10 @@ class DatabaseHelper {
   }
 
   Future<List<BillInwardWithDetails>> getBillInwardsWithDetails() async {
-  final db = await database; // Assuming 'database' is a getter that returns the database instance
+    final db =
+        await database; // Assuming 'database' is a getter that returns the database instance
 
-  final List<Map<String, dynamic>> maps = await db.rawQuery('''
+    final List<Map<String, dynamic>> maps = await db.rawQuery('''
     SELECT 
       billInwards.*,
       customers.name AS customerName,
@@ -255,10 +256,10 @@ class DatabaseHelper {
       suppliers ON billInwards.supplier = suppliers.id
   ''');
 
-  return List.generate(maps.length, (i) {
-    return BillInwardWithDetails.fromMap(maps[i]);
-  });
-}
+    return List.generate(maps.length, (i) {
+      return BillInwardWithDetails.fromMap(maps[i]);
+    });
+  }
 
   Future<List<BillInward>> getBillInwards() async {
     final db =

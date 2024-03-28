@@ -43,16 +43,6 @@ class SupplierDetailPage extends StatelessWidget {
             style: const TextStyle(fontSize: 16),
           ),
           const SizedBox(height: 8),
-          Text(
-            'Created At: ${supplier.createdAt}',
-            style: const TextStyle(fontSize: 16),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Updated At: ${supplier.updatedAt}',
-            style: const TextStyle(fontSize: 16),
-          ),
-          const SizedBox(height: 8),
           ElevatedButton(
               onPressed: () => Navigator.pop(context),
               child: const Text('Done'))

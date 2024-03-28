@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_agency/helper/views/list_empty_state_widget.dart';
+import 'package:my_agency/helper/views/responsive_list_view.dart';
 import 'package:my_agency/module/supplier/model/supplier.dart';
 import 'package:my_agency/module/supplier/cubit/supplier_cubit.dart';
 import 'package:my_agency/module/supplier/view/supplier_detail_page.dart';
@@ -36,6 +37,7 @@ class _SupplierListingPageState extends State<SupplierListingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 20.0,
         title: _isSearching
             ? TextField(
                 controller: _searchController,
@@ -51,16 +53,20 @@ class _SupplierListingPageState extends State<SupplierListingPage> {
             IconButton(
               icon: const Icon(Icons.add),
               onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return const AlertDialog(
-                      content: SingleChildScrollView(
-                        child: SupplierFormPage(),
-                      ),
-                    );
-                  },
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SupplierFormPage()),
                 );
+                // showDialog(
+                //   context: context,
+                //   builder: (context) {
+                //     return const AlertDialog(
+                //       content: SingleChildScrollView(
+                //         child: SupplierFormPage(),
+                //       ),
+                //     );
+                //   },
+                // );
               },
             ),
           IconButton(
@@ -95,51 +101,10 @@ class _SupplierListingPageState extends State<SupplierListingPage> {
                 if (suppliers.isEmpty) {
                   return const ListEmptyStateWidget();
                 }
-                return ListView.builder(
-                  itemCount: suppliers.length,
-                  itemBuilder: (context, index) {
-                    final supplier = suppliers[index];
-                    return ListTile(
-                      title: Text(supplier.name),
-                      subtitle: Text(supplier.city),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                      content: SingleChildScrollView(
-                                    child: SupplierDetailPage(
-                                      supplier: supplier,
-                                    ),
-                                  ));
-                                },
-                              );
-                            },
-                            icon: const Icon(Icons.info_outline),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                      content: SingleChildScrollView(
-                                          child: SupplierFormPage(
-                                              supplier: supplier)));
-                                },
-                              );
-                            },
-                            icon: const Icon(Icons.edit_rounded),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                );
+                return ResponsiveListView.single(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 15),
+                    child: _supplierListView(suppliers));
               } else {
                 return const Center(
                   child: Text('No suppliers found'),
@@ -149,6 +114,53 @@ class _SupplierListingPageState extends State<SupplierListingPage> {
           );
         },
       ),
+    );
+  }
+
+  ListView _supplierListView(List<Supplier> suppliers) {
+    return ListView.builder(
+      itemCount: suppliers.length,
+      itemBuilder: (context, index) {
+        final supplier = suppliers[index];
+        return ListTile(
+          title: Text(supplier.name),
+          subtitle: Text(supplier.city),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                          content: SingleChildScrollView(
+                        child: SupplierDetailPage(
+                          supplier: supplier,
+                        ),
+                      ));
+                    },
+                  );
+                },
+                icon: const Icon(Icons.info_outline),
+              ),
+              IconButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                          content: SingleChildScrollView(
+                              child: SupplierFormPage(supplier: supplier)));
+                    },
+                  );
+                },
+                icon: const Icon(Icons.edit_rounded),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

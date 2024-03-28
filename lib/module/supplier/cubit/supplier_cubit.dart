@@ -1,21 +1,24 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:my_agency/helper/database/database_helper.dart';
+import 'package:my_agency/helper/supabase/supabase_helper.dart';
 import 'package:my_agency/module/supplier/model/supplier.dart';
 
 part 'supplier_state.dart';
 
 class SupplierCubit extends Cubit<SupplierState> {
-  SupplierCubit() : super(SupplierInitial(DatabaseHelper().getSuppliers()));
+  // SupplierCubit() : super(SupplierInitial(DatabaseHelper().getSuppliers()));
+  SupplierCubit() : super(SupplierInitial(SupabaseHelper().getSuppliers()));
 
   void createSupplier(Supplier supplier) {
-    DatabaseHelper().createSupplier(supplier);
-    emit(SupplierUpdated(DatabaseHelper().getSuppliers()));
+    //DatabaseHelper().createSupplier(supplier);
+    SupabaseHelper().createSupplier(supplier);
+    emit(SupplierUpdated(SupabaseHelper().getSuppliers()));
   }
 
   void updateSupplier(Supplier supplier) {
-    DatabaseHelper().updateSupplier(supplier);
-    emit(SupplierUpdated(DatabaseHelper().getSuppliers()));
+    SupabaseHelper().updateSupplier(supplier);
+    emit(SupplierUpdated(SupabaseHelper().getSuppliers()));
   }
 
   void deleteSupplier(Supplier supplier) {

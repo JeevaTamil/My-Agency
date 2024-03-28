@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 
 class FormTextField extends StatefulWidget {
   const FormTextField({
@@ -31,6 +30,7 @@ class _FormTextFieldState extends State<FormTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      keyboardType: widget.textInputType,
       controller: widget.controller,
       maxLength: widget.maxLength,
       decoration: InputDecoration(

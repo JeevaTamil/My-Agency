@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:my_agency/helper/views/form_text_field.dart';
 import 'package:my_agency/helper/views/form_title.dart';
+import 'package:my_agency/helper/views/responsive_list_view.dart';
 import 'package:my_agency/module/supplier/model/supplier.dart';
 import 'package:my_agency/module/supplier/cubit/supplier_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,8 +25,9 @@ class _SupplierFormPageState extends State<SupplierFormPage> {
   late TextEditingController _cityController;
   late TextEditingController _phoneNumberController;
   late TextEditingController _gstNumberController;
+  late TextEditingController _commissionPercentageController;
 
-  int _commissionPercentage = int.parse(_commisionOptionItems.first);
+  double _commissionPercentage = double.parse(_commisionOptionItems.first);
 
   @override
   void initState() {
@@ -37,6 +40,8 @@ class _SupplierFormPageState extends State<SupplierFormPage> {
         text: widget.supplier?.phoneNumber.toString() ?? '');
     _gstNumberController =
         TextEditingController(text: widget.supplier?.gstNumber ?? '');
+    _commissionPercentageController = TextEditingController(
+        text: widget.supplier?.commissionPercentage.toString() ?? '');
   }
 
   @override
@@ -62,25 +67,25 @@ class _SupplierFormPageState extends State<SupplierFormPage> {
           name: name,
           address: address,
           city: city,
-          phoneNumber: phoneNumber,
+          phoneNumber: phoneNumber.toString(),
           gstNumber: gstNumber,
-          commission: _commissionPercentage,
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
+          commissionPercentage: _commissionPercentage,
+          // createdAt: DateTime.now(),
+          //  updatedAt: DateTime.now(),
         );
 
         BlocProvider.of<SupplierCubit>(context).createSupplier(supplier);
       } else {
         final supplier = Supplier(
-          id: widget.supplier!.id,
+          supplierId: widget.supplier!.supplierId,
           name: name,
           address: address,
           city: city,
-          phoneNumber: phoneNumber,
+          phoneNumber: phoneNumber.toString(),
           gstNumber: gstNumber,
-          commission: _commissionPercentage,
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
+          commissionPercentage: _commissionPercentage,
+          // createdAt: DateTime.now(),
+          // updatedAt: DateTime.now(),
         );
 
         BlocProvider.of<SupplierCubit>(context).updateSupplier(supplier);
@@ -92,95 +97,78 @@ class _SupplierFormPageState extends State<SupplierFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.45,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              FormTitle(
-                isEdit: widget.supplier != null,
-                title: 'Supplier',
-              ),
-              const SizedBox(height: 16.0),
-              FormTextField(
-                controller: _nameController,
-                labelText: 'Name',
-                isMandatory: true,
-              ),
-              const SizedBox(height: 16.0),
-              FormTextField(
-                controller: _addressController,
-                labelText: 'Address',
-                textInputType: TextInputType.streetAddress,
-              ),
-              const SizedBox(height: 16.0),
-              FormTextField(
-                controller: _cityController,
-                labelText: 'City',
-                isMandatory: true,
-              ),
-              const SizedBox(height: 16.0),
-              FormTextField(
-                controller: _phoneNumberController,
-                labelText: 'Phone Number',
-                textInputType: TextInputType.phone,
-                isMandatory: true,
-              ),
-              const SizedBox(height: 16.0),
-              FormTextField(
-                controller: _gstNumberController,
-                labelText: 'GST Number',
-                isMandatory: true,
-              ),
-              const SizedBox(height: 16.0),
-              Row(
-                children: [
-                  const Expanded(
-                    child: Text('Agent Commission Percentage'),
-                  ),
-                  DropdownButton(
-                    // icon: const Icon(Icons.percent),
-                    value: _commissionPercentage.toString(),
-                    items: _commisionOptionItems
-                        .map((e) => DropdownMenuItem<String>(
-                              value: e,
-                              child: Text(e),
-                            ))
-                        .toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        if (value != null) {
-                          _commissionPercentage = int.parse(value);
-                        }
-                      });
-                    },
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text('%'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16.0),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: _saveSupplier,
-                      child: Text(widget.supplier != null
-                          ? 'Save Changes'
-                          : 'Add Supplier'),
+    return Scaffold(
+      appBar: AppBar(
+        title: FormTitle(
+          isEdit: widget.supplier != null,
+          title: 'Supplier',
+        ),
+        elevation: 20.0,
+      ),
+      body: ResponsiveListView.single(
+        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                const SizedBox(height: 16.0),
+                FormTextField(
+                  controller: _nameController,
+                  labelText: 'Name',
+                  isMandatory: true,
+                ),
+                const SizedBox(height: 16.0),
+                FormTextField(
+                  controller: _addressController,
+                  labelText: 'Address',
+                  textInputType: TextInputType.streetAddress,
+                ),
+                const SizedBox(height: 16.0),
+                FormTextField(
+                  controller: _cityController,
+                  labelText: 'City',
+                  isMandatory: true,
+                ),
+                const SizedBox(height: 16.0),
+                FormTextField(
+                  controller: _phoneNumberController,
+                  labelText: 'Phone Number',
+                  textInputType: TextInputType.phone,
+                  isMandatory: true,
+                ),
+                const SizedBox(height: 16.0),
+                FormTextField(
+                  controller: _gstNumberController,
+                  labelText: 'GST Number',
+                  isMandatory: true,
+                ),
+                const SizedBox(height: 16.0),
+                FormTextField(
+                  controller: _commissionPercentageController,
+                  labelText: 'Commission Percentage',
+                  textInputType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  isMandatory: true,
+                ),
+                const SizedBox(height: 16.0),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                        onPressed: _saveSupplier,
+                        child: Text(widget.supplier != null
+                            ? 'Save Changes'
+                            : 'Add Supplier'),
+                      ),
                     ),
-                  ),
-                ],
-              )
-            ],
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),

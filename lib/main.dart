@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:my_agency/helper/theme/color_schemes.g.dart';
 import 'package:my_agency/module/bill_inward/cubit/bill_inward_cubit.dart';
 import 'package:my_agency/module/customer/cubit/customer_cubit.dart';
 import 'package:my_agency/module/navigation/cubit/navigation_cubit.dart';
 import 'package:my_agency/module/navigation/view/nav_landing_page.dart';
 import 'package:my_agency/module/supplier/cubit/supplier_cubit.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Supabase.initialize(
+    url: 'https://qebxrmzcqjalwdrvwxyr.supabase.co',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFlYnhybXpjcWphbHdkcnZ3eHlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTEyNTMzMjYsImV4cCI6MjAyNjgyOTMyNn0.1VVaozyvRcopABLt8LXgBWjIMNrIleFfvFfw9CI95XQ',
+  );
+
   runApp(const MyApp());
 }
+
+final supabase = Supabase.instance.client;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -34,17 +46,10 @@ class MyApp extends StatelessWidget {
         title: 'My Agency',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          brightness: Brightness.dark,
-          primarySwatch: Colors.blue,
-          appBarTheme: const AppBarTheme(
-            backgroundColor:
-                Colors.blue, // Set the background color of the AppBar
-            foregroundColor: Colors.white, // Set the text color of the AppBar
-            iconTheme: IconThemeData(
-                color: Colors.white), // Set the color of the AppBar icons
-            elevation: 0, // Set the elevation of the AppBar (0 for no shadow)
-          ),
+          useMaterial3: true,
+          colorScheme: lightColorScheme,
         ),
+        darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
         home: const NavLandingPage(),
       ),
     );
