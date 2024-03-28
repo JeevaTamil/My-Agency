@@ -1,47 +1,45 @@
 class Customer {
-  int? id;
+  int? customerId;
   String name;
   String address;
   String city;
-  int phoneNumber;
+  String phoneNumber;
   String gstNumber;
-  DateTime createdAt;
-  DateTime updatedAt;
 
   Customer({
-    this.id,
+    this.customerId,
     required this.name,
     required this.address,
     required this.city,
     required this.phoneNumber,
     required this.gstNumber,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
+    Map<String, dynamic> map = {
       'name': name,
       'address': address,
       'city': city,
-      'phn_number': phoneNumber,
+      'phone_number': phoneNumber,
       'gst_number': gstNumber,
-      'created_at': createdAt.millisecondsSinceEpoch,
-      'updated_at': updatedAt.millisecondsSinceEpoch,
     };
+
+    // Exclude 'id' field if it's null
+    if (customerId != null) {
+      map['customer_id'] = customerId!;
+    }
+
+    return map;
   }
 
   factory Customer.fromMap(Map<String, dynamic> map) {
     return Customer(
-      id: map['id'],
+      customerId: map['customer_id'],
       name: map['name'],
       address: map['address'],
       city: map['city'],
-      phoneNumber: map['phn_number'],
+      phoneNumber: map['phone_number'],
       gstNumber: map['gst_number'],
-      createdAt: DateTime.fromMillisecondsSinceEpoch(map['created_at']),
-      updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updated_at']),
     );
   }
 }

@@ -1,21 +1,22 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:my_agency/helper/database/database_helper.dart';
+import 'package:my_agency/helper/supabase/supabase_helper.dart';
 import 'package:my_agency/module/customer/model/customer.dart';
 
 part 'customer_state.dart';
 
 class CustomerCubit extends Cubit<CustomerState> {
-  CustomerCubit() : super(CustomerInitial(DatabaseHelper().getCustomers()));
+  CustomerCubit() : super(CustomerInitial(SupabaseHelper().getCustomers()));
 
   void createCustomer(Customer customer) {
-    DatabaseHelper().createCustomer(customer);
-    emit(CustomerUpdated(DatabaseHelper().getCustomers()));
+    SupabaseHelper().createCustomer(customer);
+    emit(CustomerUpdated(SupabaseHelper().getCustomers()));
   }
 
   void updateCustomer(Customer customer) {
-    DatabaseHelper().updateCustomer(customer);
-    emit(CustomerUpdated(DatabaseHelper().getCustomers()));
+    SupabaseHelper().updateCustomer(customer);
+    emit(CustomerUpdated(SupabaseHelper().getCustomers()));
   }
 
   void deleteCustomer(Customer customer) {
@@ -24,7 +25,7 @@ class CustomerCubit extends Cubit<CustomerState> {
   }
 
   Future<void> searchCustomer(String searchString) async {
-    final customers = await DatabaseHelper().getCustomers();
+    final customers = await SupabaseHelper().getCustomers();
     final filteredCustomers = customers
         .where((customer) =>
             customer.name.toLowerCase().contains(searchString.toLowerCase()) ||

@@ -110,7 +110,7 @@ class DatabaseHelper {
       'customers',
       customer.toMap(),
       where: 'id = ?',
-      whereArgs: [customer.id],
+      whereArgs: [customer.customerId],
     );
   }
 
@@ -128,7 +128,7 @@ class DatabaseHelper {
     await db.delete(
       'customers',
       where: 'id = ?',
-      whereArgs: [customer.id],
+      whereArgs: [customer.customerId],
     );
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_agency/helper/views/form_text_field.dart';
 import 'package:my_agency/helper/views/form_title.dart';
+import 'package:my_agency/helper/views/responsive_list_view.dart';
 import 'package:my_agency/module/customer/model/customer.dart';
 import 'package:my_agency/module/customer/cubit/customer_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -50,7 +51,7 @@ class _CustomerFormPageState extends State<CustomerFormPage> {
       final name = _nameController.text;
       final address = _addressController.text;
       final city = _cityController.text;
-      final phoneNumber = int.parse(_phoneNumberController.text);
+      final phoneNumber = _phoneNumberController.text;
       final gstNumber = _gstNumberController.text;
 
       if (widget.customer == null) {
@@ -60,91 +61,91 @@ class _CustomerFormPageState extends State<CustomerFormPage> {
           city: city,
           phoneNumber: phoneNumber,
           gstNumber: gstNumber,
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
         );
 
         BlocProvider.of<CustomerCubit>(context).createCustomer(customer);
       } else {
         final customer = Customer(
-          id: widget.customer!.id,
+          customerId: widget.customer!.customerId,
           name: name,
           address: address,
           city: city,
           phoneNumber: phoneNumber,
           gstNumber: gstNumber,
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
         );
 
         BlocProvider.of<CustomerCubit>(context).updateCustomer(customer);
       }
 
-      Navigator.pop(context); 
+      Navigator.pop(context);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.45,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              FormTitle(
-                isEdit: widget.customer != null,
-                title: 'Customer',
-              ),
-              const SizedBox(height: 16.0),
-              FormTextField(
-                controller: _nameController,
-                labelText: 'Name',
-                isMandatory: true,
-              ),
-              const SizedBox(height: 16.0),
-              FormTextField(
-                controller: _addressController,
-                labelText: 'Address',
-              ),
-              const SizedBox(height: 16.0),
-              FormTextField(
-                controller: _cityController,
-                labelText: 'City',
-                isMandatory: true,
-              ),
-              const SizedBox(height: 16.0),
-              FormTextField(
-                controller: _phoneNumberController,
-                labelText: 'Phone Number',
-                textInputType: TextInputType.phone,
-                isMandatory: true,
-              ),
-              const SizedBox(height: 16.0),
-              FormTextField(
-                controller: _gstNumberController,
-                labelText: 'GST Number',
-                isMandatory: true,
-              ),
-              const SizedBox(height: 16.0),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: _saveCustomer,
-                      child: Text(widget.customer != null
-                          ? 'Save Changes'
-                          : 'Add Customer'),
+    return Scaffold(
+      appBar: AppBar(
+        title: FormTitle(
+          isEdit: widget.customer != null,
+          title: 'Customer',
+        ),
+        elevation: 20.0,
+      ),
+      body: ResponsiveListView.single(
+        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                const SizedBox(height: 16.0),
+                FormTextField(
+                  controller: _nameController,
+                  labelText: 'Name',
+                  isMandatory: true,
+                ),
+                const SizedBox(height: 16.0),
+                FormTextField(
+                  controller: _addressController,
+                  labelText: 'Address',
+                ),
+                const SizedBox(height: 16.0),
+                FormTextField(
+                  controller: _cityController,
+                  labelText: 'City',
+                  isMandatory: true,
+                ),
+                const SizedBox(height: 16.0),
+                FormTextField(
+                  controller: _phoneNumberController,
+                  labelText: 'Phone Number',
+                  textInputType: TextInputType.phone,
+                  isMandatory: true,
+                ),
+                const SizedBox(height: 16.0),
+                FormTextField(
+                  controller: _gstNumberController,
+                  labelText: 'GST Number',
+                  isMandatory: true,
+                ),
+                const SizedBox(height: 16.0),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                        onPressed: _saveCustomer,
+                        child: Text(widget.customer != null
+                            ? 'Save Changes'
+                            : 'Add Customer'),
+                      ),
                     ),
-                  ),
-                ],
-              )
-            ],
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),

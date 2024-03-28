@@ -15,7 +15,7 @@ class CustomerDetailPage extends StatelessWidget {
         children: <Widget>[
           const Text(
             'Customer Details',
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
           Text(
@@ -40,16 +40,6 @@ class CustomerDetailPage extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             'GST Number: ${customer.gstNumber}',
-            style: const TextStyle(fontSize: 16),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Created At: ${customer.createdAt}',
-            style: const TextStyle(fontSize: 16),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Updated At: ${customer.updatedAt}',
             style: const TextStyle(fontSize: 16),
           ),
           const SizedBox(height: 8),

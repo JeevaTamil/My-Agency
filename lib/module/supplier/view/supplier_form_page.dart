@@ -7,8 +7,6 @@ import 'package:my_agency/module/supplier/model/supplier.dart';
 import 'package:my_agency/module/supplier/cubit/supplier_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-const List<String> _commisionOptionItems = <String>['2', '3', '4', '5'];
-
 class SupplierFormPage extends StatefulWidget {
   final Supplier? supplier; // Optional parameter to pass a supplier for editing
 
@@ -26,8 +24,6 @@ class _SupplierFormPageState extends State<SupplierFormPage> {
   late TextEditingController _phoneNumberController;
   late TextEditingController _gstNumberController;
   late TextEditingController _commissionPercentageController;
-
-  double _commissionPercentage = double.parse(_commisionOptionItems.first);
 
   @override
   void initState() {
@@ -69,7 +65,8 @@ class _SupplierFormPageState extends State<SupplierFormPage> {
           city: city,
           phoneNumber: phoneNumber.toString(),
           gstNumber: gstNumber,
-          commissionPercentage: _commissionPercentage,
+          commissionPercentage:
+              double.parse(_commissionPercentageController.text),
           // createdAt: DateTime.now(),
           //  updatedAt: DateTime.now(),
         );
@@ -83,7 +80,8 @@ class _SupplierFormPageState extends State<SupplierFormPage> {
           city: city,
           phoneNumber: phoneNumber.toString(),
           gstNumber: gstNumber,
-          commissionPercentage: _commissionPercentage,
+          commissionPercentage:
+              double.parse(_commissionPercentageController.text),
           // createdAt: DateTime.now(),
           // updatedAt: DateTime.now(),
         );
@@ -93,6 +91,10 @@ class _SupplierFormPageState extends State<SupplierFormPage> {
 
       Navigator.pop(context);
     }
+  }
+
+  String _formTitle(String title) {
+    return widget.supplier != null ? 'Edit $title' : 'Add $title';
   }
 
   @override

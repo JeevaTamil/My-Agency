@@ -12,22 +12,8 @@ class FormTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          isEdit ? 'Edit $title' : 'Add $title',
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16.0,
-          ),
-        ),
-        const Spacer(),
-        IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: const Icon(Icons.close_rounded)),
-      ],
+    return Text(
+      isEdit ? 'Edit $title' : 'Add $title',
     );
   }
 }

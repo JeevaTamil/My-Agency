@@ -55,18 +55,9 @@ class _SupplierListingPageState extends State<SupplierListingPage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SupplierFormPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const SupplierFormPage()),
                 );
-                // showDialog(
-                //   context: context,
-                //   builder: (context) {
-                //     return const AlertDialog(
-                //       content: SingleChildScrollView(
-                //         child: SupplierFormPage(),
-                //       ),
-                //     );
-                //   },
-                // );
               },
             ),
           IconButton(
@@ -146,13 +137,12 @@ class _SupplierListingPageState extends State<SupplierListingPage> {
               ),
               IconButton(
                 onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                          content: SingleChildScrollView(
-                              child: SupplierFormPage(supplier: supplier)));
-                    },
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SupplierFormPage(
+                              supplier: supplier,
+                            )),
                   );
                 },
                 icon: const Icon(Icons.edit_rounded),

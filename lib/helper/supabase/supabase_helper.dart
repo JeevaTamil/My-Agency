@@ -19,7 +19,7 @@ class SupabaseHelper {
   Future<void> createSupplier(Supplier supplier) async {
     final response =
         await supabase.from(SupabaseTables.suppliers).insert(supplier.toMap());
-    if (response.error != null) {
+    if (response != null && response.error != null) {
       print('Error creating supplier: ${response.error!.message}');
     } else {
       print('Supplier created successfully');
@@ -31,6 +31,23 @@ class SupabaseHelper {
         .from(SupabaseTables.suppliers)
         .update(supplier.toMap())
         .eq('supplier_id', supplier.supplierId!);
+  }
+
+  Future<void> createCustomer(Customer customer) async {
+    final response =
+        await supabase.from(SupabaseTables.customers).insert(customer.toMap());
+    if (response != null && response.error != null) {
+      print('Error creating customer: ${response.error!.message}');
+    } else {
+      print('Customer created successfully');
+    }
+  }
+
+  Future<void> updateCustomer(Customer customer) async {
+    await supabase
+        .from(SupabaseTables.customers)
+        .update(customer.toMap())
+        .eq('customer_id', customer.customerId!);
   }
 
   Future<List<Customer>> getCustomers() async {

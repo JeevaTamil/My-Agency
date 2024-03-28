@@ -27,7 +27,7 @@ class SupplierCubit extends Cubit<SupplierState> {
   }
 
   Future<void> searchSupplier(String searchString) async {
-    final suppliers = await DatabaseHelper().getSuppliers();
+    final suppliers = await SupabaseHelper().getSuppliers();
     final filteredSuppliers = suppliers
         .where((supplier) =>
             supplier.name.toLowerCase().contains(searchString.toLowerCase()) ||

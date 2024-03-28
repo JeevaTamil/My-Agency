@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_agency/helper/views/list_empty_state_widget.dart';
+import 'package:my_agency/helper/views/responsive_list_view.dart';
 import 'package:my_agency/module/customer/model/customer.dart';
 import 'package:my_agency/module/customer/cubit/customer_cubit.dart';
 import 'package:my_agency/module/customer/view/customer_detail_page.dart';
@@ -36,6 +37,7 @@ class _CustomerListingPageState extends State<CustomerListingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 20.0,
         title: _isSearching
             ? TextField(
                 controller: _searchController,
@@ -52,15 +54,10 @@ class _CustomerListingPageState extends State<CustomerListingPage> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               icon: const Icon(Icons.add),
               onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return const AlertDialog(
-                      content: SingleChildScrollView(
-                        child: CustomerFormPage(),
-                      ),
-                    );
-                  },
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const CustomerFormPage()),
                 );
               },
             ),
@@ -97,51 +94,10 @@ class _CustomerListingPageState extends State<CustomerListingPage> {
                 if (customers.isEmpty) {
                   return const ListEmptyStateWidget();
                 }
-                return ListView.builder(
-                  itemCount: customers.length,
-                  itemBuilder: (context, index) {
-                    final customer = customers[index];
-                    return ListTile(
-                      title: Text(customer.name),
-                      subtitle: Text(customer.city),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                      content: SingleChildScrollView(
-                                    child: CustomerDetailPage(
-                                      customer: customer,
-                                    ),
-                                  ));
-                                },
-                              );
-                            },
-                            icon: const Icon(Icons.info_outline),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                      content: SingleChildScrollView(
-                                          child: CustomerFormPage(
-                                              customer: customer)));
-                                },
-                              );
-                            },
-                            icon: const Icon(Icons.edit_rounded),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                );
+                return ResponsiveListView.single(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                    child: _customerList(customers));
               } else {
                 return const Center(
                   child: Text('No customers found'),
@@ -151,6 +107,51 @@ class _CustomerListingPageState extends State<CustomerListingPage> {
           );
         },
       ),
+    );
+  }
+
+  ListView _customerList(List<Customer> customers) {
+    return ListView.builder(
+      itemCount: customers.length,
+      itemBuilder: (context, index) {
+        final customer = customers[index];
+        return ListTile(
+          title: Text(customer.name),
+          subtitle: Text(customer.city),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                          content: SingleChildScrollView(
+                        child: CustomerDetailPage(
+                          customer: customer,
+                        ),
+                      ));
+                    },
+                  );
+                },
+                icon: const Icon(Icons.info_outline),
+              ),
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            CustomerFormPage(customer: customer)),
+                  );
+                },
+                icon: const Icon(Icons.edit_rounded),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
