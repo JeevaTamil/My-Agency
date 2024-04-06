@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:my_agency/helper/database/database_helper.dart';
+import 'package:my_agency/helper/supabase/supabase_helper.dart';
 import 'package:my_agency/module/bill_inward/view/bill_inward_listing_page.dart';
 import 'package:my_agency/module/customer/view/customer_listing_page.dart';
 import 'package:my_agency/module/supplier/view/supplier_listing_page.dart';
+import 'package:my_agency/module/transaction/view/transaction_listing_page.dart';
 
 class NavModel {
   String label;
@@ -14,18 +16,18 @@ class NavModel {
   static final navModelList = [
     NavModel(
       icon: const Icon(Icons.factory_outlined),
-      label: 'Supplier',
+      label: 'Suppliers',
       page: SupplierListingPage(),
     ),
     NavModel(
       icon: const Icon(Icons.co_present_outlined),
-      label: 'Customer',
+      label: 'Customers',
       page: CustomerListingPage(),
     ),
     NavModel(
-      icon: const Icon(Icons.receipt_outlined),
-      label: 'Bill Inward',
-      page: const BillInwardListingPage(),
+      icon: const Icon(Icons.compare_arrows_outlined),
+      label: 'Transactions',
+      page: const TransactionListingPage(),
     ),
     NavModel(
       icon: const Icon(Icons.more_horiz),
@@ -35,7 +37,8 @@ class NavModel {
           child: ElevatedButton(
             child: Text('reset db'),
             onPressed: () {
-              DatabaseHelper().flushDatabaseAndStartFreshly();
+              // DatabaseHelper().flushDatabaseAndStartFreshly();
+              SupabaseHelper().getTransaction();
             },
           ),
         ),

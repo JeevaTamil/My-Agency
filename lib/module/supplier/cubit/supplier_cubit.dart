@@ -36,4 +36,9 @@ class SupplierCubit extends Cubit<SupplierState> {
 
     emit(SupplierSearch(Future.value(filteredSuppliers)));
   }
+
+  void findSupplier(int supplierId) {
+    final suppliers = SupabaseHelper().findSupplier(supplierId);
+    emit(SupplierFind(suppliers));
+  }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:my_agency/helper/database/database_helper.dart';
-import 'package:my_agency/helper/utils/widget_util/currency_text_input_formatter.dart';
+import 'package:my_agency/helper/views/currency_text_input_formatter.dart';
 import 'package:my_agency/helper/views/customer_search_dropdown_widget.dart';
 import 'package:my_agency/helper/views/date_picker.dart';
 import 'package:my_agency/helper/views/form_text_field.dart';
@@ -175,7 +175,7 @@ class _BillInwardFormPageState extends State<BillInwardFormPage> {
                 Expanded(
                   child: Column(
                     children: [
-                      Text('Discount Type'),
+                      const Text('Discount Type'),
                       const SizedBox(
                         height: 8,
                       ),

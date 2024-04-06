@@ -93,10 +93,6 @@ class _SupplierFormPageState extends State<SupplierFormPage> {
     }
   }
 
-  String _formTitle(String title) {
-    return widget.supplier != null ? 'Edit $title' : 'Add $title';
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

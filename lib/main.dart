@@ -5,6 +5,7 @@ import 'package:my_agency/module/customer/cubit/customer_cubit.dart';
 import 'package:my_agency/module/navigation/cubit/navigation_cubit.dart';
 import 'package:my_agency/module/navigation/view/nav_landing_page.dart';
 import 'package:my_agency/module/supplier/cubit/supplier_cubit.dart';
+import 'package:my_agency/module/transaction/cubit/transaction_cubit.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -40,6 +41,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => BillInwardCubit(),
+        ),
+        BlocProvider(
+          create: (context) => TransactionCubit(),
         ),
       ],
       child: MaterialApp(

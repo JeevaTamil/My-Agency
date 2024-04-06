@@ -7,7 +7,14 @@ import 'package:my_agency/module/customer/view/customer_detail_page.dart';
 import 'package:my_agency/module/customer/view/customer_form_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+typedef void CustomerCallback(Customer customer);
+
 class CustomerListingPage extends StatefulWidget {
+  const CustomerListingPage(
+      {super.key, this.selectedCustomer, this.isFormField = false});
+  final CustomerCallback? selectedCustomer;
+  final bool isFormField;
+
   @override
   _CustomerListingPageState createState() => _CustomerListingPageState();
 }
@@ -47,7 +54,9 @@ class _CustomerListingPageState extends State<CustomerListingPage> {
                   border: InputBorder.none,
                 ),
               )
-            : const Text('Customer Listing'),
+            : widget.isFormField
+                ? const Text('Select Customer')
+                : const Text('Customer Listing'),
         actions: [
           if (!_isSearching)
             IconButton(
@@ -150,6 +159,13 @@ class _CustomerListingPageState extends State<CustomerListingPage> {
               ),
             ],
           ),
+          onTap: () {
+            if (widget.isFormField) {
+              setState(() {
+                widget.selectedCustomer!(customer);
+              });
+            }
+          },
         );
       },
     );

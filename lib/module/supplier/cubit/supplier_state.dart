@@ -18,3 +18,7 @@ final class SupplierUpdated extends SupplierState {
 final class SupplierSearch extends SupplierState {
   const SupplierSearch(super.suppliers);
 }
+
+final class SupplierFind extends SupplierState {
+  const SupplierFind(super.suppliers);
+}

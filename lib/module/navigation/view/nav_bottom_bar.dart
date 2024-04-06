@@ -10,7 +10,10 @@ class NavBarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      enableFeedback: true,
+      selectedItemColor: Theme.of(context).colorScheme.primaryContainer,
       elevation: 5.0,
+      backgroundColor: Theme.of(context).primaryColorDark,
       type: BottomNavigationBarType.fixed,
       items: NavModel.navModelList
           .map((e) => BottomNavigationBarItem(icon: e.icon, label: e.label))

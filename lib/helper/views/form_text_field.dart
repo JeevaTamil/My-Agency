@@ -12,6 +12,7 @@ class FormTextField extends StatefulWidget {
     this.maxLength = 25,
     this.onChanged,
     this.enabled = true,
+    this.onTap,
   });
   final TextEditingController controller;
   final String labelText;
@@ -21,6 +22,7 @@ class FormTextField extends StatefulWidget {
   final int maxLength;
   final void Function(String)? onChanged;
   final bool enabled;
+  final Function()? onTap;
 
   @override
   State<FormTextField> createState() => _FormTextFieldState();

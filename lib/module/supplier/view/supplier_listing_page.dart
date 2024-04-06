@@ -7,7 +7,14 @@ import 'package:my_agency/module/supplier/view/supplier_detail_page.dart';
 import 'package:my_agency/module/supplier/view/supplier_form_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+typedef void SupplierCallback(Supplier supplier);
+
 class SupplierListingPage extends StatefulWidget {
+  SupplierListingPage(
+      {super.key, this.selectedSupplier, this.isFormField = false});
+  final SupplierCallback? selectedSupplier;
+  final bool isFormField;
+
   @override
   _SupplierListingPageState createState() => _SupplierListingPageState();
 }
@@ -47,7 +54,9 @@ class _SupplierListingPageState extends State<SupplierListingPage> {
                   border: InputBorder.none,
                 ),
               )
-            : const Text('Supplier Listing'),
+            : widget.isFormField
+                ? const Text('Select Supplier')
+                : const Text('Supplier Listing'),
         actions: [
           if (!_isSearching)
             IconButton(
@@ -149,6 +158,13 @@ class _SupplierListingPageState extends State<SupplierListingPage> {
               ),
             ],
           ),
+          onTap: () {
+            if (widget.isFormField) {
+              setState(() {
+                widget.selectedSupplier!(supplier);
+              });
+            }
+          },
         );
       },
     );
